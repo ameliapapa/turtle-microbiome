@@ -11,7 +11,7 @@ The dataset for this project comes from a published study by JCU researchers [Mc
 provided, and can be retrieved by following this link (https://cloudstor.aarnet.edu.au/plus/s/WrbtAMgHh3MVVeS/download). As part of a course at James Cook University, coordinator Ira Cooke has followed the steps below 
 to generate smaller data. Firstly, paired end sequencing data was imported into a qiime object.
 
-```{r, eval=FALSE}
+```{bash, eval=FALSE}
 qiime tools import \
   --type 'SampleData[PairedEndSequencesWithQuality]' \
   --input-path reads \
@@ -20,7 +20,7 @@ qiime tools import \
 ```
 
 Next, denoising was performed using dada2:
-```{r, eval = FALSE}
+```{bash, eval = FALSE}
 qiime dada2 denoise-paired \
   --p-n-threads 40 \
   --i-demultiplexed-seqs demux-paired-end.qza \
