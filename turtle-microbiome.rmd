@@ -45,7 +45,7 @@ Analysis for this 16s metabarcoding dataset will proceed as follows:
 - Taxonomic classification
 - Visualisation and statistical tests based on the question 'Does microbiome diversity and/or composition vary with body location?'
 
-1. Summarizing the outputs from dada2:
+### Summarizing the outputs from dada2:
 ```{bash, eval = FALSE}
 qiime feature-table summarize \
   --i-table table.qza \
@@ -58,48 +58,76 @@ qiime feature-table tabulate-seqs \
   --o-visualization rep-seqs.qzv
 ```
 
-2. Multiple sequence alignment
+### Multiple sequence alignment
 ```{bash, eval = FALSE}
 qiime alignment mafft \
   --i-sequences rep-seqs.qza \
   --o-alignment aligned_repseqs.qza
 ```
 
-3. Mask/Filter alignment to remove noise
+### Mask/Filter alignment to remove noise
 ```{bash, eval = FALSE}
 qiime alignment mask \
   --i-alignment aligned_repseqs.qza \
   --o-masked-alignment masked_aligned_repseqs.qza
 ```
 
-4. FastTree to produce unrooted phylogenetic tree
+### FastTree to produce unrooted phylogenetic tree
 ```{bash, eval = FALSE}
 qiime phylogeny fasttree \
   --i-alignment masked_aligned_repseqs.qza \
   --o-tree unrooted_tree.qza
 ```
 
-5. Root Tree (root at midpoint of the longest tip-to-tip distance in the unrooted tree)
-```{bash}
+### Root Tree 
+Root at midpoint of the longest tip-to-tip distance in the unrooted tree
+```{bash, eval = FALSE}
 qiime phylogeny midpoint-root \
   --i-tree unrooted_tree.qza \
   --o-rooted-tree rooted_tree.qza
 ```
 
+### Taxonomic assignment
+```{bash, eval = FALSE}
+qiime feature-classifier classify-sklearn \
+  --i-classifier classifier.qza \
+  --i-reads rep-seqs.qza \
+  --o-classification taxonomy.qza
+```
 
+```{bash, eval = FALSE}
+qiime metadata tabulate \
+  --m-input-file taxonomy.qza \
+  --o-visualization taxonomy.qzv
+```
+
+Adding taxonomy information to phylogenetic tree
+
+```{bash, eval = FALSE}
+qiime empress community-plot \
+  --i-tree rooted_tree.qza \
+  --i-feature-table table.qza \
+  --m-sample-metadata-file sample-metadata.tsv \
+  --m-feature-metadata-file taxonomy.qza \
+  --o-visualization empress-tree-tex2.qzv
+```
+
+### Alpha and Beta diversity metrics
+Table.qzv was vizualized using qiime2view (https://view.qiime2.org/) and the appropriate maximum sequencing depth was found to be 18278.
 ```{bash, eval = FALSE}
 qiime diversity alpha-rarefaction \
   --i-table table.qza \
   --i-phylogeny rooted_tree.qza \
-  --p-max-depth 6317 \
+  --p-max-depth 18278 \
   --o-visualization alpha_rarefaction.qzv
 ```
+
 Running through the core alpha and beta diversity analyses.
 ```{bash, eval = FALSE}
 qiime diversity core-metrics-phylogenetic \
   --i-phylogeny rooted_tree.qza \
-  --i-table dada2_table.qza \
-  --p-sampling-depth 6317 \
-  --m-metadata-file metadata.tsv \
+  --i-table table.qza \
+  --p-sampling-depth 18278 \
+  --m-metadata-file sample-metadata.tsv \
   --output-dir core_metrics_results
   ```
