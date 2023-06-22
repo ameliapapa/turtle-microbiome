@@ -6,7 +6,6 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 The dataset for this project comes from a published study by JCU researchers [McKnight et al 2020](https://www.microbiologyresearch.org/content/journal/micro/10.1099/mic.0.000904). Partially processed data have been
 provided, and can be retrieved by following this link (https://cloudstor.aarnet.edu.au/plus/s/WrbtAMgHh3MVVeS/download). As part of a course at James Cook University, coordinator Ira Cooke has followed the steps below 
 to generate smaller data. Firstly, paired end sequencing data was imported into a qiime object.
@@ -45,3 +44,5 @@ Analysis for this 16s metabarcoding dataset will proceed as follows:
 - Calculate core alpha and beta diversity metrics
 - Taxonomic classification
 - Visualisation and statistical tests based on the question 'Does microbiome diversity and/or composition vary with body location?'
+
+`
