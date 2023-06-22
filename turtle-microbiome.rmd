@@ -45,4 +45,34 @@ Analysis for this 16s metabarcoding dataset will proceed as follows:
 - Taxonomic classification
 - Visualisation and statistical tests based on the question 'Does microbiome diversity and/or composition vary with body location?'
 
-`
+1. Summarizing the outputs from dada2:
+```{bash}
+qiime feature-table summarize \
+  --i-table table.qza \
+  --o-visualization table.qzv
+```
+
+```{bash}
+qiime feature-table tabulate-seqs \
+  --i-data rep-seqs.qza \
+  --o-visualization rep-seqs.qzv
+```
+
+2. Multiple sequence alignment
+
+```{bash}
+qiime diversity alpha-rarefaction \
+  --i-table table.qza \
+  --i-phylogeny rooted_tree.qza \
+  --p-max-depth 6317 \
+  --o-visualization alpha_rarefaction.qzv
+```
+Running through the core alpha and beta diversity analyses.
+```{bash}
+qiime diversity core-metrics-phylogenetic \
+  --i-phylogeny rooted_tree.qza \
+  --i-table dada2_table.qza \
+  --p-sampling-depth 6317 \
+  --m-metadata-file metadata.tsv \
+  --output-dir core_metrics_results
+  ```
