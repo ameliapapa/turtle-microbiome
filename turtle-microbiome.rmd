@@ -1,0 +1,47 @@
+---
+title: "Turtle Microbiome Study"
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+The dataset for this project comes from a published study by JCU researchers [McKnight et al 2020](https://www.microbiologyresearch.org/content/journal/micro/10.1099/mic.0.000904). Partially processed data have been
+provided, and can be retrieved by following this link (https://cloudstor.aarnet.edu.au/plus/s/WrbtAMgHh3MVVeS/download). As part of a course at James Cook University, coordinator Ira Cooke has followed the steps below 
+to generate smaller data. Firstly, paired end sequencing data was imported into a qiime object.
+
+```{r, eval=FALSE}
+qiime tools import \
+  --type 'SampleData[PairedEndSequencesWithQuality]' \
+  --input-path reads \
+  --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+  --output-path demux-paired-end.qza
+```
+
+Next, denoising was performed using dada2:
+```{r, eval = FALSE}
+qiime dada2 denoise-paired \
+  --p-n-threads 40 \
+  --i-demultiplexed-seqs demux-paired-end.qza \
+  --p-trim-left-f 20 \
+  --p-trim-left-r 21 \
+  --p-trunc-len-f 270 \
+  --p-trunc-len-r 230 \
+  --p-max-ee-f 6 \
+  --p-max-ee-r 6 \
+  --p-trunc-q 5 \
+  --o-table table.qza \
+  --o-representative-sequences rep-seqs.qza \
+  --o-denoising-stats denoising-stats.qza
+```
+
+A Naive Bayesian classifier (classifier.qza) was trained using version 13_5 of the Green Genes database. This classifier was trained specifically based on the primers used to amplify the V4-V5 region in McKnight et al 
+and is appropriate for use with the --i-classifier argument required by qiime feature-classifier classify-sklearn. This file will be used to assign taxonomic labels to ASVs.
+
+Analysis for this 16s metabarcoding dataset will proceed as follows:
+- Analysis with qiime feature-table summarize to guide a decision on the rarefaction threshold
+- Build a phylogenetic tree from ASVs
+- Calculate core alpha and beta diversity metrics
+- Taxonomic classification
+- Visualisation and statistical tests based on the question 'Does microbiome diversity and/or composition vary with body location?'
