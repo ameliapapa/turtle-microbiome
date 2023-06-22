@@ -46,21 +46,48 @@ Analysis for this 16s metabarcoding dataset will proceed as follows:
 - Visualisation and statistical tests based on the question 'Does microbiome diversity and/or composition vary with body location?'
 
 1. Summarizing the outputs from dada2:
-```{bash}
+```{bash, eval = FALSE}
 qiime feature-table summarize \
   --i-table table.qza \
   --o-visualization table.qzv
 ```
 
-```{bash}
+```{bash, eval = FALSE}
 qiime feature-table tabulate-seqs \
   --i-data rep-seqs.qza \
   --o-visualization rep-seqs.qzv
 ```
 
 2. Multiple sequence alignment
+```{bash, eval = FALSE}
+qiime alignment mafft \
+  --i-sequences rep-seqs.qza \
+  --o-alignment aligned_repseqs.qza
+```
 
+3. Mask/Filter alignment to remove noise
+```{bash, eval = FALSE}
+qiime alignment mask \
+  --i-alignment aligned_repseqs.qza \
+  --o-masked-alignment masked_aligned_repseqs.qza
+```
+
+4. FastTree to produce unrooted phylogenetic tree
+```{bash, eval = FALSE}
+qiime phylogeny fasttree \
+  --i-alignment masked_aligned_repseqs.qza \
+  --o-tree unrooted_tree.qza
+```
+
+5. Root Tree (root at midpoint of the longest tip-to-tip distance in the unrooted tree)
 ```{bash}
+qiime phylogeny midpoint-root \
+  --i-tree unrooted_tree.qza \
+  --o-rooted-tree rooted_tree.qza
+```
+
+
+```{bash, eval = FALSE}
 qiime diversity alpha-rarefaction \
   --i-table table.qza \
   --i-phylogeny rooted_tree.qza \
@@ -68,7 +95,7 @@ qiime diversity alpha-rarefaction \
   --o-visualization alpha_rarefaction.qzv
 ```
 Running through the core alpha and beta diversity analyses.
-```{bash}
+```{bash, eval = FALSE}
 qiime diversity core-metrics-phylogenetic \
   --i-phylogeny rooted_tree.qza \
   --i-table dada2_table.qza \
