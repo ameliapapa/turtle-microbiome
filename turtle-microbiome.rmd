@@ -18,7 +18,7 @@ qiime tools import \
   --output-path demux-paired-end.qza
 ```
 
-Next, denoising was performed using dada2:
+Next, denoising was performed using dada2. As detailed in the methods section of the paper provided, to remove primer sequence 20 and 21 bp of the 5'-end were trimmed from the forward and reverse reads respectively. To remove low-quality base pairs at the 3'-end, forward and reverse strands were trimmed at position 270 and 230 respectively. Maximum expected error value is set to 6.
 ```{bash, eval = FALSE}
 qiime dada2 denoise-paired \
   --p-n-threads 40 \
