@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 The dataset for this project comes from a published study by JCU researchers [McKnight et al 2020](https://www.microbiologyresearch.org/content/journal/micro/10.1099/mic.0.000904). Partially processed data have been
-provided, and can be retrieved by following this link (https://cloudstor.aarnet.edu.au/plus/s/WrbtAMgHh3MVVeS/download). As part of a course at James Cook University, coordinator Ira Cooke has followed the steps below 
+provided. As part of a course at James Cook University, coordinator Ira Cooke has followed the steps below 
 to generate smaller data. Firstly, paired end sequencing data was imported into a qiime object.
 
 ```{bash, eval=FALSE}
@@ -18,8 +18,12 @@ qiime tools import \
   --output-path demux-paired-end.qza
 ```
 
+<<<<<<< HEAD
 Next, denoising was performed using dada2. As detailed in the methods section of the paper provided, to remove primer sequence 20 and 21 bp of the 5'-end were trimmed from the forward and reverse reads respectively. 
 To remove low-quality base pairs at the 3'-end, forward and reverse strands were trimmed at position 270 and 230 respectively. Maximum expected error value is set to 6.
+=======
+Next, denoising was performed using dada2. 
+>>>>>>> 15a6347 (rm link to data)
 ```{bash, eval = FALSE}
 qiime dada2 denoise-paired \
   --p-n-threads 40 \
